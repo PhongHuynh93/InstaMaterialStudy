@@ -68,7 +68,7 @@ public class FeedItemAnimator extends DefaultItemAnimator {
         return false;
     }
 
-    // info - call the animation when add new item
+    // info - call the animation when add new item, the new item will come from the bottom to the top,
     private void runEnterAnimation(final FeedAdapter.CellFeedViewHolder holder) {
         final int screenHeight = Utils.getScreenHeight(holder.itemView.getContext());
         holder.itemView.setTranslationY(screenHeight);
