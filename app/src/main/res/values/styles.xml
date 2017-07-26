@@ -10,6 +10,8 @@
         <item name="colorControlHighlight">@color/fab_color_pressed</item>
     </style>
 
+    <!--info - each activity has the windows background color when we start one activity
+        make this transparent so we can see the windows under it-->
     <style name="AppTheme.TransparentActivity">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>

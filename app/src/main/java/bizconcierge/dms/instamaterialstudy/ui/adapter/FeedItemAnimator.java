@@ -68,6 +68,7 @@ public class FeedItemAnimator extends DefaultItemAnimator {
         return false;
     }
 
+    // info - call the animation when add new item
     private void runEnterAnimation(final FeedAdapter.CellFeedViewHolder holder) {
         final int screenHeight = Utils.getScreenHeight(holder.itemView.getContext());
         holder.itemView.setTranslationY(screenHeight);
