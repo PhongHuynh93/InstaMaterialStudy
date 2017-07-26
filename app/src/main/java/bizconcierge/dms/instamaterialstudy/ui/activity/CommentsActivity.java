@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -15,6 +17,7 @@ import bizconcierge.dms.instamaterialstudy.R;
 import bizconcierge.dms.instamaterialstudy.ui.adapter.CommentsAdapter;
 import bizconcierge.dms.instamaterialstudy.ui.utils.Utils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by USER on 7/26/2017.
@@ -39,6 +42,7 @@ public class CommentsActivity extends BaseDrawerActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
 
+        setupComments();
         drawingStartLocation = getIntent().getIntExtra(ARG_DRAWING_START_LOCATION, 0);
 
         // animate only the first tiem
@@ -54,6 +58,54 @@ public class CommentsActivity extends BaseDrawerActivity{
                 }
             });
         }
+    }
+
+
+    @OnClick(R.id.btnSendComment)
+    public void onSendCommentClick() {
+        commentsAdapter.addItem();
+        // info - when add the new item, make an animation
+        commentsAdapter.setAnimationsLocked(false);
+        commentsAdapter.setDelayEnterAnimation(false);
+        // move to the last item
+        rvComments.smoothScrollBy(0, rvComments.getChildAt(0).getHeight() * commentsAdapter.getItemCount());
+    }
+
+    // info - animation when exit this UI
+    @Override
+    public void onBackPressed() {
+        // info - move the content out of screen
+        contentRoot.animate()
+                .translationY(Utils.getScreenHeight(this))
+                .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        CommentsActivity.super.onBackPressed();
+                        // not used the animation when exit the app
+                        overridePendingTransition(0, 0);
+                    }
+                })
+                .start();
+    }
+
+
+    private void setupComments() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvComments.setLayoutManager(linearLayoutManager);
+        rvComments.setHasFixedSize(true);
+
+        commentsAdapter = new CommentsAdapter(this);
+        rvComments.setAdapter(commentsAdapter);
+        rvComments.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        rvComments.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    commentsAdapter.setAnimationsLocked(true);
+                }
+            }
+        });
     }
 
     private void startIntroAnimation() {
