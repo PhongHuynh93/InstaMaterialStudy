@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--info https://developer.android.com/guide/topics/resources/animation-resource.html#translate-element
+translate: di chuyển
+đi X từ 0-> 2 và  rung-->
 <translate xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="300"
     android:fromXDelta="0%"

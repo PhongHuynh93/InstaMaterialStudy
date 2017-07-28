@@ -69,7 +69,13 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
 
     private void setupFeed() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
-
+            @Override
+            protected int getExtraLayoutSpace(RecyclerView.State state) {
+                // info - According to the documetation, it should return amount of extra space (in pixels) that should be laid out by our LayoutManager:
+                // because first - rcv has only one row, so in the second row, it make lag a little, after that rcv has 2 rows and not lad anymore
+                // so make the first row has 300 extra = space of seocnd row to remove lag.
+                return 300;
+            }
         };
         rvFeed.setLayoutManager(linearLayoutManager);
         feedAdapter = new FeedAdapter(this);

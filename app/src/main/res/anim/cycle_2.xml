@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--xoay vòng 2 lần và trở về chỗ cũ-->
 <cycleInterpolator xmlns:android="http://schemas.android.com/apk/res/android"
                    android:cycles="2"/>

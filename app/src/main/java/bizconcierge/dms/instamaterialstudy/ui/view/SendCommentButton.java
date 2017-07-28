@@ -13,11 +13,16 @@ import bizconcierge.dms.instamaterialstudy.R;
  * Created by froger_mcs on 01.12.14.
  * info - viewanimator is the framelayout, used to animate switching between view
  * <a href="http://abhiandroid.com/ui/viewanimator"></a>
+ *
+ * ViewAnimator as a base class for our button.
+ * It has one functionality which is the most interesting for us -
+ * it can perform enter and exit animations when switching between its child views.
  */
 public class SendCommentButton extends ViewAnimator implements View.OnClickListener {
     public static final int STATE_SEND = 0;
     public static final int STATE_DONE = 1;
 
+    // time between 2 change state
     private static final long RESET_STATE_DELAY_MILLIS = 2000;
 
     private int currentState;
@@ -52,6 +57,11 @@ public class SendCommentButton extends ViewAnimator implements View.OnClickListe
         super.setOnClickListener(this);
     }
 
+    /**
+     * info - nhớ này, mấy cái runnable phải remove khi detect window
+     * onDetachedFromWindow(): removes revertStateRunnable callback in case you scheduled one, but haven’t finished yet
+     * (i.e. you destroy the Activity before button state switches back).
+     */
     @Override
     protected void onDetachedFromWindow() {
         removeCallbacks(revertStateRunnable);

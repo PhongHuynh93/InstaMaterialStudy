@@ -64,6 +64,7 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_heart_outline_grey"/>
 
+            <!--info make the comment has shadow in android < 21-->
             <ImageButton
                 android:id="@+id/btnComments"
                 android:layout_width="48dp"

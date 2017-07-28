@@ -7,23 +7,26 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import bizconcierge.dms.instamaterialstudy.R;
 import bizconcierge.dms.instamaterialstudy.ui.adapter.CommentsAdapter;
 import bizconcierge.dms.instamaterialstudy.ui.utils.Utils;
+import bizconcierge.dms.instamaterialstudy.ui.view.SendCommentButton;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by USER on 7/26/2017.
  */
 
-public class CommentsActivity extends BaseDrawerActivity{
+public class CommentsActivity extends BaseDrawerActivity {
     public static final String ARG_DRAWING_START_LOCATION = "arg_drawing_start_location";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -33,6 +36,10 @@ public class CommentsActivity extends BaseDrawerActivity{
     RecyclerView rvComments;
     @BindView(R.id.llAddComment)
     LinearLayout llAddComment;
+    @BindView(R.id.btnSendComment)
+    SendCommentButton btnSendComment;
+    @BindView(R.id.etComment)
+    EditText etComment;
 
     private CommentsAdapter commentsAdapter;
     private int drawingStartLocation;
@@ -43,6 +50,7 @@ public class CommentsActivity extends BaseDrawerActivity{
         setContentView(R.layout.activity_comments);
 
         setupComments();
+        setupSendCommentButton();
         drawingStartLocation = getIntent().getIntExtra(ARG_DRAWING_START_LOCATION, 0);
 
         // animate only the first tiem
@@ -60,15 +68,33 @@ public class CommentsActivity extends BaseDrawerActivity{
         }
     }
 
+    private void setupSendCommentButton() {
+        btnSendComment.setOnSendClickListener(new SendCommentButton.OnSendClickListener() {
+            @Override
+            public void onSendClickListener(View v) {
+                if (validateComment()) {
+                    commentsAdapter.addItem();
+                    // info - when add the new item, make an animation
+                    commentsAdapter.setAnimationsLocked(false);
+                    commentsAdapter.setDelayEnterAnimation(false);
+                    // move to the last item
+                    rvComments.smoothScrollBy(0, rvComments.getChildAt(0).getHeight() * commentsAdapter.getItemCount());
 
-    @OnClick(R.id.btnSendComment)
-    public void onSendCommentClick() {
-        commentsAdapter.addItem();
-        // info - when add the new item, make an animation
-        commentsAdapter.setAnimationsLocked(false);
-        commentsAdapter.setDelayEnterAnimation(false);
-        // move to the last item
-        rvComments.smoothScrollBy(0, rvComments.getChildAt(0).getHeight() * commentsAdapter.getItemCount());
+                    etComment.setText(null);
+                    btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
+                }
+            }
+        });
+    }
+
+    private boolean validateComment() {
+        if (TextUtils.isEmpty(etComment.getText())) {
+            // info - shake animation
+            btnSendComment.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake_error));
+            return false;
+        }
+
+        return true;
     }
 
     // info - animation when exit this UI

@@ -68,6 +68,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
+    // info - only animate view that new
     private void runEnterAnimation(View view, int position) {
         if (animationsLocked) return;
 
