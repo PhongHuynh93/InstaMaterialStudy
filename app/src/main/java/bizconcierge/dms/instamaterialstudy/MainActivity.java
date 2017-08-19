@@ -20,10 +20,12 @@ import bizconcierge.dms.instamaterialstudy.ui.activity.CommentsActivity;
 import bizconcierge.dms.instamaterialstudy.ui.adapter.FeedAdapter;
 import bizconcierge.dms.instamaterialstudy.ui.adapter.FeedItemAnimator;
 import bizconcierge.dms.instamaterialstudy.ui.utils.Utils;
+import bizconcierge.dms.instamaterialstudy.ui.view.FeedContextMenu;
+import bizconcierge.dms.instamaterialstudy.ui.view.FeedContextMenuManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFeedItemClickListener {
+public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFeedItemClickListener, FeedContextMenu.OnFeedContextMenuItemClickListener {
     @Nullable
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -82,6 +84,13 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
         feedAdapter.setOnFeedItemClickListener(this);
         rvFeed.setAdapter(feedAdapter);
         rvFeed.setItemAnimator(new FeedItemAnimator());
+        rvFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     private void startIntroAnimation() {
@@ -145,11 +154,30 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
 
     @Override
     public void onMoreClick(View v, int position) {
-
+        FeedContextMenuManager.getInstance().toggleContextMenuFromView(v, position, this);
     }
 
     @Override
     public void onProfileClick(View v) {
+    }
 
+    @Override
+    public void onReportClick(int feedItem) {
+        FeedContextMenuManager.getInstance().hideContextMenu();
+    }
+
+    @Override
+    public void onSharePhotoClick(int feedItem) {
+        FeedContextMenuManager.getInstance().hideContextMenu();
+    }
+
+    @Override
+    public void onCopyShareUrlClick(int feedItem) {
+        FeedContextMenuManager.getInstance().hideContextMenu();
+    }
+
+    @Override
+    public void onCancelClick(int feedItem) {
+        FeedContextMenuManager.getInstance().hideContextMenu();
     }
 }

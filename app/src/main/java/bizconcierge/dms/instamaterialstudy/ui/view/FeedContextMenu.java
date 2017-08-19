@@ -37,8 +37,13 @@ public class FeedContextMenu extends LinearLayout {
         this.onItemClickListener = onItemClickListener;
     }
 
+    /**
+     * Left and top lines define area which should be stretched (we define only this area which can be safety removed or duplicated vertically or horizontaly).
+     * Right and bottom lines define content area (place where lines start and end will be translated to view paddings).
+     */
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_context_menu, this, true);
+        // use 9 patch for elevation
         setBackgroundResource(R.drawable.bg_container_shadow);
         setOrientation(VERTICAL);
         setLayoutParams(new LayoutParams(CONTEXT_MENU_WIDTH, ViewGroup.LayoutParams.WRAP_CONTENT));
